@@ -1,0 +1,59 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: customers
+        columns:
+          - name: customer_id
+            tests:
+              - unique
+              - not_null
+      - name: orders
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'customers')
+                  field: customer_id
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['created', 'paid', 'shipped', 'cancelled', 'refunded']
+
+models:
+  - name: stg_customers
+    description: "Cleaned customer records from raw.customers"
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+
+  - name: stg_orders
+    description: "Cleaned order records from raw.orders"
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+  - name: dim_customers
+    description: "Customer dimension"
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+
+  - name: fct_orders
+    description: "Orders fact table"
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
