@@ -21,7 +21,7 @@ services:
       DBT_PROJECT_DIR: /app/dbt
       DBT_PROFILES_DIR: /app/dbt
       DUCKDB_PATH: /data/warehouse.duckdb
-    command: ["dbt", "docs", "serve", "--host", "0.0.0.0", "--port", "8080"]
+    command: ["sh", "-c", "dbt docs generate --project-dir $$DBT_PROJECT_DIR --profiles-dir $$DBT_PROFILES_DIR && dbt docs serve --host 0.0.0.0 --port 8080 --project-dir $$DBT_PROJECT_DIR --profiles-dir $$DBT_PROFILES_DIR"]
 
   demo:
     build: .
