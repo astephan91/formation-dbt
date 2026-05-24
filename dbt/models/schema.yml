@@ -26,6 +26,7 @@ sources:
             tests:
               - accepted_values:
                   values: ['created', 'paid', 'shipped', 'cancelled', 'refunded']
+      - name: order_items
 
 models:
   - name: stg_customers
