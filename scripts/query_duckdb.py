@@ -8,9 +8,10 @@ def main():
     # show a tiny report from dbt models
     queries = {
         "tables": "SHOW ALL TABLES;",
-        "sample_dim_customers": "SELECT * FROM analytics_analytics.dim_customers LIMIT 5;",
-        "sample_fct_orders": "SELECT * FROM analytics_analytics.fct_orders LIMIT 5;",
-        "top_customers": "SELECT * FROM analytics_analytics.rpt_customer_revenue ORDER BY total_revenue DESC LIMIT 10;",
+        "sample customers": "SELECT * FROM raw.customers LIMIT 5;",
+        "sample orders": "SELECT * FROM raw.orders LIMIT 5;",
+        "sample order_items": "SELECT * FROM raw.order_items LIMIT 5;",
+
     }
     for name, q in queries.items():
         print("\n===", name, "===")
