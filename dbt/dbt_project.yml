@@ -16,15 +16,7 @@ clean-targets: ["target", "dbt_packages", "logs"]
 
 models:
   demo_dbt_duckdb:
-    staging:
-      +materialized: view
-      +schema: staging
-    dwh:
-      +materialized: table
-      +schema: dwh
-    marts:
-      +materialized: table
-      +schema: analytics
+    +materialized: view
 
 # make docs nicer
 quoting:
