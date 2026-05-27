@@ -205,6 +205,14 @@ Vous créez toutes les colonnes via une boucle qui prend en paramètre la liste 
 #### Niveau 3
 Vous créez toutes les colonnes via une boucle qui prend en paramètre le résultat de `select distinct status from raw.orders` 
 
+# Exercice 10 - Flux de A à Z
+Vous voilà prêt.e.s à construire votre flux en entier.
 
 ### À faire
+- Créez plusieurs tables permettant de suivre les performances du magasin : commandes par jour, profit, produits les plus vendus, etc.
+- Ajoutez des tests à vos différents modèles. N'utilisez pas simplement les tests de base, mais profitez en pour créer un test personnalisé, qui pourrait correspondre à un cas particulier des systèmes internes.
+- Documentez les modèles, et ajoutez une exposure comme si ces modèles étaient utilisés par un outil de BI ou de Data Science.
+
 ### ✅ Validation attendue
+- L'architecture de votre projet est logique et compréhensible.
+- Votre projet est réutilisable dans un autre contexte.
