@@ -104,6 +104,13 @@ Dans le dossier `models`, créez un fichier .sql contenant une requête quelconq
 ### Bonus
 - Si vous avez fini trop vite, faites en sorte de modifier les données dans duckDB pour que l'un des tests plante.
 
+# Exercice 3.5 - Fraîcheur
+
+La qualité de la donnée n'est pas le seul risque en data. On peut aussi être confronté à un pipeline d'ingestion qui plante sans que personne ne s'en soit rendu compte.
+Pour pallier à ça, on peut définir un seuil de fraîcheur attendu pour chaque source.
+
+Partons du principe que notre site e-commerce marche très bien, et définissons un test de fraîcheur sur `order_date`.
+
 # Exercice 4 - Configuration des modèles
 
 ### À faire
@@ -154,9 +161,49 @@ Modifiez cette macro pour que chaque modèle soit construit exactement dans le s
 
 # Exercice 6 - Utilisation de seeds
 
+### À faire
+Créez une seed `countries.csv` et servez vous-en pour créer les colonnes suivantes :
 
+- `is_eu` (boolean)
+- `region` (string)
 
+### ✅ Validation attendue
+La seed apparaît bien dans duckDB, et les colonnes sont alimentées.
 
+### Questions
+Si la macro et la seed donnent le même résultat, dans quel cas de figure utiliser l'une plutôt que l'autre ?
+
+# Exercice 7 - Modèles incrémentaux
+Vous voilà expert en dbt, et vous commencez à réaliser que recharger entièrement l'entrepôt de données à chaque run est peut être un peu idiot. Après tout, une fois qu'une commande est terminée, elle ne bouge plus.
+
+### À faire
+Mettez en place l'incrémentalité sur votre table des commandes, en utilisant 2 logiques différentes :
+- un filtre
+- une clef primaire
+
+### ✅ Validation attendue
+-  Les lignes ne sont pas doublées dans la table qui est devenue incrémentale.
+
+# Exercice 8 - Snapshots
+
+# Exercice 9 - Boucles Jinja
+
+### À faire
+Pour réaliser une analyse sur le nombre de commandes journalières par statut, créez un modèle `fact_daily_order_status` contenant les colonnes suivantes :
+
+- day_date
+- nb_paid_orders
+- nb_cancelled_orders
+- nb_shipped_orders
+
+etc.
+
+#### Niveau 1
+Vous créez toutes les colonnes à la main
+#### Niveau 2
+Vous créez toutes les colonnes via une boucle qui prend en paramètre la liste de tous les status
+#### Niveau 3
+Vous créez toutes les colonnes via une boucle qui prend en paramètre le résultat de `select distinct status from raw.orders` 
 
 
 ### À faire
