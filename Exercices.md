@@ -136,6 +136,18 @@ On cherche à ajouter une colonne **`is_eu`** (booléen) : `true` si `country` e
 ### Questions
 - Quel aurait été un autre moyen de gérer la liste de pays appartenant à l'UE ?
 
+### Bonus — Utilisation de `var()`
+Plutôt que de coder en dur la liste de pays dans la macro, déclarez-la comme variable dans `dbt_project.yml` :
+
+```yaml
+vars:
+  eu_countries: ['FR', 'DE', 'ES', 'IT', 'NL', 'BE', 'CH']
+```
+
+Puis utilisez `{{ var('eu_countries') }}` dans votre macro ou directement dans votre modèle SQL.
+
+**Question** : quand est-il préférable d'utiliser `var()` plutôt que de coder la valeur directement dans la macro ?
+
 # Exercice 5.5 - generate_schema_name
 
 Pour déterminer dans quel schéma sera construit un modèle, dbt utilise la macro suivante :
@@ -185,6 +197,57 @@ Mettez en place l'incrémentalité sur votre table des commandes, en utilisant 2
 -  Les lignes ne sont pas doublées dans la table qui est devenue incrémentale.
 
 # Exercice 8 - Snapshots
+
+Dans un e-commerce, les données clients évoluent dans le temps : un client peut changer de pays, d'adresse e-mail, etc. Un modèle classique (`view` ou `table`) ne conserve que l'état actuel — l'historique est perdu.
+
+Les **snapshots dbt** implémentent le **SCD Type 2** : pour chaque changement détecté, la ligne précédente est "fermée" (`dbt_valid_to` est renseigné) et une nouvelle ligne est créée, permettant de retracer l'historique complet.
+
+### À faire
+
+1. Créez un fichier `customers_snapshot.sql` dans le dossier `snapshots/` :
+
+```sql
+{% snapshot customers_snapshot %}
+
+{{
+    config(
+        target_schema='snapshots',
+        unique_key='customer_id',
+        strategy='check',
+        check_cols=['email', 'country'],
+    )
+}}
+
+select * from {{ source('raw', 'customers') }}
+
+{% endsnapshot %}
+```
+
+2. Lancez le snapshot une première fois :
+```bash
+docker compose run --rm demo dbt snapshot
+```
+
+3. Vérifiez dans DuckDB que la table `snapshots.customers_snapshot` est apparue avec les colonnes `dbt_valid_from`, `dbt_valid_to` et `dbt_scd_id`.
+
+4. Simulez un déménagement d'un client :
+```sql
+UPDATE raw.customers SET country = 'US' WHERE customer_id = 'C00001';
+```
+
+5. Relancez `dbt snapshot` et observez ce qui a changé dans la table snapshot pour ce client.
+
+### ✅ Validation attendue
+- La table `snapshots.customers_snapshot` est présente dans DuckDB avec les colonnes dbt.
+- Après modification et re-snapshot, le client C00001 apparaît en **deux lignes** : l'ancienne (avec `dbt_valid_to` renseigné) et la nouvelle (avec `dbt_valid_to` NULL).
+
+### Questions
+- Quelle est la différence fondamentale entre un snapshot et un modèle incrémental ?
+- La table `raw.customers` n'a pas de colonne `updated_at`. Quel impact cela a-t-il sur le choix de la stratégie ? Dans quel cas utiliseriez-vous `strategy='timestamp'` ?
+- Que se passe-t-il si vous modifiez une colonne qui n'est **pas** dans `check_cols` ?
+
+### Bonus
+- Référencez le snapshot dans un modèle dbt avec `{{ ref('customers_snapshot') }}` pour construire une dimension client historisée.
 
 # Exercice 9 - Boucles Jinja
 
