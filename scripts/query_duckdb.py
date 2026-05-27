@@ -10,8 +10,7 @@ def main():
         "tables": "SHOW ALL TABLES;",
         "sample customers": "SELECT * FROM raw.customers LIMIT 5;",
         "sample orders": "SELECT * FROM raw.orders LIMIT 5;",
-        "sample order_items": "SELECT * FROM raw.order_items LIMIT 5;",
-
+        "first model": "SELECT * FROM analytics.my_first_model LIMIT 5;"
     }
     for name, q in queries.items():
         print("\n===", name, "===")
