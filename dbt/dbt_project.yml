@@ -17,6 +17,20 @@ clean-targets: ["target", "dbt_packages", "logs"]
 models:
   demo_dbt_duckdb:
     +materialized: view
+    staging:
+      +schema: staging
+      +tags: staging
+      +materialized: table
+      ecommerce:
+        +tags: ecommerce
+        base:
+          materialized: view
+    dwh:
+      +schema: dwh
+
+seeds:
+  schema: seed
+  delimiter: ","
 
 # make docs nicer
 quoting:

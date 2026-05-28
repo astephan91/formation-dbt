@@ -1,0 +1,1 @@
+select * from {{ref('base_ecommerce_order_items')}}

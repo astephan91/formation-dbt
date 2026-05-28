@@ -1,0 +1,3 @@
+{
+    "dbt.dbtPythonPathOverride": "/Users/arnaud.stephan/Perso/formation-dbt/.venv/bin/python3"
+}

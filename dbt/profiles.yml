@@ -7,6 +7,15 @@ demo_dbt_duckdb:
       path: "{{ env_var('DUCKDB_PATH', '/data/warehouse.duckdb') }}"
       threads: 4
       # dbt models will be built under this schema by default
-      schema: analytics
+      schema: dbt_arnaud
+      # keep DuckDB connection open across dbt models for speed
+      keep_open: true
+    prod:
+      type: duckdb
+      # DuckDB file is persisted via docker volume
+      path: "{{ env_var('DUCKDB_PATH', '/data/warehouse.duckdb') }}"
+      threads: 4
+      # dbt models will be built under this schema by default
+      schema: analytics_prod
       # keep DuckDB connection open across dbt models for speed
       keep_open: true

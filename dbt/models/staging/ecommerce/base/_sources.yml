@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: ecommerce
+    schema: raw
+    tables:
+      - name: customers
+        columns:
+          - name: customer_id
+            tests:
+              - not_null
+      - name: orders
+        columns:
+          - name: order_id
+            tests:
+              - unique
+      - name: order_items

@@ -214,7 +214,7 @@ Les **snapshots dbt** implémentent le **SCD Type 2** : pour chaque changement d
         target_schema='snapshots',
         unique_key='customer_id',
         strategy='check',
-        check_cols=['email', 'country'],
+        check_cols=['country'],
     )
 }}
 
