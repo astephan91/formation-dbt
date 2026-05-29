@@ -1,0 +1,9 @@
+models:
+  - name: stg_ecommerce_orders
+    description: This table contains orders from our shop
+
+    columns:
+      - name: order_date
+        description: The date at which the order was created
+        data_tests:
+          - not_null

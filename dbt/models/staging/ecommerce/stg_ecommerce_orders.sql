@@ -1,6 +1,7 @@
 {{ config(
     materialized="incremental",
-    unique_key="order_id"
+    unique_key="order_id",
+    pre_hook="DELETE FROM {{this}} WHERE event_date >= -7 jours"
 ) }}
 
 SELECT
