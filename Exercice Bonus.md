@@ -1,6 +1,6 @@
 Vous venez d'arriver dans une nouvelle entreprise, et devez migrer des procédures stockées vers une architecture plus moderne et scalable.
 
-Voici quelques procédures, comment procéderiez vous pour lancer la migration ?
+Voici une des procédures, comment procéderiez vous pour lancer la migration ?
 
 ```sql
 CREATE OR REPLACE PROCEDURE dwh.alim_dim_owner()
