@@ -1,3 +1,5 @@
+version: 2
+
 models:
   - name: stg_ecommerce_orders
     description: This table contains orders from our shop
