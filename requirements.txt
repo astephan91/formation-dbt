@@ -1,0 +1,10 @@
+# Pinned for a reproducible workshop setup (as of 2026-02)
+dbt-core==1.11.6
+dbt-postgres==1.10.2
+psycopg2-binary==2.9.10
+
+prefect==3.6.19
+prefect-dbt==0.7.18
+
+faker==24.11.0
+pandas==2.2.3

@@ -1,0 +1,72 @@
+x-postgres-env: &postgres-env
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: dbt
+  POSTGRES_PASSWORD: dbt
+  POSTGRES_DB: warehouse
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: dbt
+      POSTGRES_PASSWORD: dbt
+      POSTGRES_DB: warehouse
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbt -d warehouse"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  prefect-server:
+    image: prefecthq/prefect:3-python3.12
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+    volumes:
+      - prefect_data:/root/.prefect
+    environment:
+      PREFECT_SERVER_API_HOST: 0.0.0.0
+      PREFECT_UI_API_URL: http://localhost:4200/api
+
+  dbt-docs:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
+    environment:
+      <<: *postgres-env
+      DBT_PROJECT_DIR: /app/dbt
+      DBT_PROFILES_DIR: /app/dbt
+    command: ["sh", "-c", "dbt docs generate --project-dir $$DBT_PROJECT_DIR --profiles-dir $$DBT_PROFILES_DIR && dbt docs serve --host 0.0.0.0 --port 8080 --project-dir $$DBT_PROJECT_DIR --profiles-dir $$DBT_PROFILES_DIR"]
+
+  demo:
+    build: .
+    depends_on:
+      prefect-server:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *postgres-env
+      PREFECT_API_URL: http://prefect-server:4200/api
+      DBT_PROJECT_DIR: /app/dbt
+      DBT_PROFILES_DIR: /app/dbt
+      CUSTOMERS: "100"
+      ORDERS: "1000"
+      SEED: "42"
+    volumes:
+      - ./:/app
+    command: ["python", "-m", "flows.dbt_flow"]
+
+volumes:
+  prefect_data:
+  pg_data:

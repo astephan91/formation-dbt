@@ -1,0 +1,40 @@
+name: "demo_dbt"
+version: "1.0.0"
+config-version: 2
+
+profile: "demo_dbt"
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+
+models:
+  demo_dbt:
+    +materialized: view
+    staging:
+      +schema: staging
+      +tags: staging
+      +materialized: table
+      ecommerce:
+        +tags: ecommerce
+        base:
+          +materialized: view
+    dwh:
+      +schema: dwh
+
+seeds:
+  +schema: seed
+  +delimiter: ","
+
+# make docs nicer
+quoting:
+  database: false
+  schema: false
+  identifier: false
